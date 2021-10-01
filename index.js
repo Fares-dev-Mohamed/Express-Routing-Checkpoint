@@ -1,23 +1,23 @@
 const express = require('express');
-
 const app = express();
 
 const hour = new Date().getHours();
-console.log(hour)
 const day = new Date().getDay();
-console.log(day)
-
-app.get('/',(req,res)=>{
-    if((hour>8) && (hour<17)&&(day<6) ) res.sendFile(__dirname + '/public/home.html');
-    else res.sendFile(__dirname + '/public/closed.html')
-});
-app.get('/home',  function(req, res) {
-    res.render('index', { title: 'Hey', message: 'Hello there!'});
-  });
 
 app.use(express.static(__dirname + '/public'));
+app.use((req, res, next) => {
+    if (day >0 && day <6 && hour >7 && hour < 17) {
+      next();
+    } else {  
+          res.sendFile(__dirname + '/public/closed.html')
+    }
+  });
+ app.get('/', (req,res)=>{
+    res.sendFile(__dirname + "/public/home.html")
+ })
 app.set('view engine', 'pug');
-app.listen(4001,(error)=>{
+
+app.listen(5000,(error)=>{
     if (error) console.log('serveur is not running')
-    else console.log ('sever is running on port 4001')
+    else console.log ('sever is running on port 5000')
 })
